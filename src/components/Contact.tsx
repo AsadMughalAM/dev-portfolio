@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Mail, Github, Linkedin, Send, ExternalLink, CheckCircle, AlertCircle } from 'lucide-react';
+import { Mail, Github, Linkedin, Send, ExternalLink, CheckCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { playClickSound } from '@/utils/soundUtils';
 import { useForm } from 'react-hook-form';
@@ -10,6 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useState } from 'react';
 import emailjs from '@emailjs/browser';
+import { EMAILJS_CONFIG } from '@/utils/emailConfig';
 
 const contactFormSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
@@ -40,23 +41,18 @@ const Contact = ({ id }: ContactProps) => {
     await playClickSound();
     
     try {
-      // EmailJS configuration
-      const serviceId = 'service_your_service_id'; // Replace with your EmailJS service ID
-      const templateId = 'template_your_template_id'; // Replace with your EmailJS template ID
-      const publicKey = 'your_public_key'; // Replace with your EmailJS public key
-
       const templateParams = {
         from_name: data.name,
         from_email: data.email,
         message: data.message,
-        to_name: 'Asad Ali', // Your name
+        to_name: 'Asad Ali',
       };
 
       const response = await emailjs.send(
-        serviceId,
-        templateId,
+        EMAILJS_CONFIG.SERVICE_ID,
+        EMAILJS_CONFIG.TEMPLATE_ID,
         templateParams,
-        publicKey
+        EMAILJS_CONFIG.PUBLIC_KEY
       );
 
       if (response.status === 200) {
@@ -146,7 +142,7 @@ const Contact = ({ id }: ContactProps) => {
                 Send Me a Message
               </CardTitle>
               <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                Fill out the form below and I'll receive your message via EmailJS.
+                Fill out the form below and I'll receive your message instantly via EmailJS.
               </p>
             </CardHeader>
 
@@ -276,30 +272,15 @@ const Contact = ({ id }: ContactProps) => {
               </p>
             </Card>
 
-            <Card className="p-6 bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800 rounded-xl">
+            <Card className="p-6 bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800 rounded-xl">
               <div className="flex items-start space-x-3">
-                <Send className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5" />
+                <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400 mt-0.5" />
                 <div>
-                  <h4 className="text-sm font-semibold text-blue-800 dark:text-blue-200 mb-1">
-                    EmailJS Integration
+                  <h4 className="text-sm font-semibold text-green-800 dark:text-green-200 mb-1">
+                    EmailJS Ready!
                   </h4>
-                  <p className="text-xs text-blue-700 dark:text-blue-300">
-                    Your message will be delivered directly to my email using EmailJS. 
-                    No server required - secure and reliable.
-                  </p>
-                </div>
-              </div>
-            </Card>
-
-            <Card className="p-6 bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800 rounded-xl">
-              <div className="flex items-start space-x-3">
-                <AlertCircle className="h-5 w-5 text-amber-600 dark:text-amber-400 mt-0.5" />
-                <div>
-                  <h4 className="text-sm font-semibold text-amber-800 dark:text-amber-200 mb-1">
-                    Setup Required
-                  </h4>
-                  <p className="text-xs text-amber-700 dark:text-amber-300">
-                    Please configure your EmailJS credentials in the Contact component to enable email functionality.
+                  <p className="text-xs text-green-700 dark:text-green-300">
+                    Your contact form is now configured and ready to send emails directly to your inbox.
                   </p>
                 </div>
               </div>
