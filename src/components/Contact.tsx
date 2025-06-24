@@ -148,19 +148,6 @@ const Contact = ({ id }: ContactProps) => {
             </CardHeader>
 
             <CardContent>
-              {/* Netlify Forms Setup (hidden field) */}
-              <form 
-                name="contact" 
-                netlify 
-                hidden
-                data-netlify="true"
-                data-netlify-honeypot="bot-field"
-              >
-                <input type="text" name="name" />
-                <input type="email" name="email" />
-                <textarea name="message"></textarea>
-              </form>
-
               {isSubmitted ? (
                 <div className="text-center py-8">
                   <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
@@ -172,9 +159,18 @@ const Contact = ({ id }: ContactProps) => {
                   </p>
                 </div>
               ) : (
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6" data-netlify="true" data-netlify-honeypot="bot-field" name="contact">
-                  {/* Honeypot field for spam protection */}
+                <form 
+                  onSubmit={handleSubmit(onSubmit)} 
+                  className="space-y-6" 
+                  name="contact"
+                  method="POST"
+                  data-netlify="true"
+                  data-netlify-honeypot="bot-field"
+                >
+                  {/* Hidden fields for Netlify */}
                   <input type="hidden" name="form-name" value="contact" />
+                  
+                  {/* Honeypot field for spam protection */}
                   <div style={{ display: 'none' }}>
                     <label>
                       Don't fill this out if you're human: <input name="bot-field" />
@@ -188,6 +184,7 @@ const Contact = ({ id }: ContactProps) => {
                     <Input
                       id="name"
                       {...register('name')}
+                      name="name"
                       className="w-full"
                       placeholder="Your Name"
                       aria-invalid={errors.name ? 'true' : 'false'}
@@ -203,6 +200,7 @@ const Contact = ({ id }: ContactProps) => {
                       id="email"
                       type="email"
                       {...register('email')}
+                      name="email"
                       className="w-full"
                       placeholder="your.email@example.com"
                       aria-invalid={errors.email ? 'true' : 'false'}
@@ -217,6 +215,7 @@ const Contact = ({ id }: ContactProps) => {
                     <Textarea
                       id="message"
                       {...register('message')}
+                      name="message"
                       className="w-full min-h-[120px]"
                       placeholder="Your message here..."
                       aria-invalid={errors.message ? 'true' : 'false'}
