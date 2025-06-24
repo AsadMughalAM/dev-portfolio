@@ -6,11 +6,57 @@ A modern, responsive portfolio website built with React, TypeScript, and Tailwin
 
 This project is configured for deployment on Netlify with the following features:
 
-### Netlify Forms Integration
-- **Contact Form**: Automatically handled by Netlify Forms
-- **Email Notifications**: Instant email alerts when someone submits the form
-- **Spam Protection**: Built-in honeypot and reCAPTCHA support
-- **Form Submissions**: View all submissions in your Netlify dashboard
+### EmailJS Integration
+- **Contact Form**: Powered by EmailJS for reliable email delivery
+- **No Backend Required**: Sends emails directly from the frontend
+- **Spam Protection**: Built-in form validation and honeypot protection
+- **Fallback Options**: Gmail compose link as backup option
+
+### EmailJS Setup Instructions
+
+1. **Create EmailJS Account**:
+   - Go to [EmailJS](https://www.emailjs.com/)
+   - Sign up for a free account
+   - Create a new service (Gmail, Outlook, etc.)
+
+2. **Configure Email Service**:
+   - Add your email service (Gmail recommended)
+   - Verify your email address
+   - Note down your Service ID
+
+3. **Create Email Template**:
+   - Go to Email Templates
+   - Create a new template with these variables:
+     ```
+     From: {{from_name}} <{{from_email}}>
+     To: {{to_name}}
+     Subject: New Portfolio Contact Message
+     
+     Message:
+     {{message}}
+     
+     Reply to: {{from_email}}
+     ```
+   - Note down your Template ID
+
+4. **Get Public Key**:
+   - Go to Account settings
+   - Copy your Public Key
+
+5. **Update Configuration**:
+   - Open `src/utils/emailConfig.ts`
+   - Replace the placeholder values:
+     ```typescript
+     export const EMAILJS_CONFIG = {
+       SERVICE_ID: 'your_actual_service_id',
+       TEMPLATE_ID: 'your_actual_template_id', 
+       PUBLIC_KEY: 'your_actual_public_key',
+     };
+     ```
+
+6. **Update Contact Component**:
+   - Open `src/components/Contact.tsx`
+   - Replace the placeholder values in the `onSubmit` function
 
 ### Deployment Steps
 
@@ -25,28 +71,22 @@ This project is configured for deployment on Netlify with the following features
    - Set publish directory: `build`
    - Deploy!
 
-3. **Configure Email Notifications**:
-   - Go to your Netlify site dashboard
-   - Navigate to **Forms** section
-   - Click on **Settings & Usage**
-   - Add your email in **Form notifications**
-   - Enable email notifications for new submissions
-
 ### Environment Setup
 
 The project includes:
 - `netlify.toml` - Netlify configuration
 - `public/_redirects` - SPA routing support
-- Netlify Forms integration in Contact component
+- EmailJS integration in Contact component
 
 ## 📧 Contact Form Features
 
-- **Instant Delivery**: Messages sent via Netlify Forms
-- **Email Notifications**: You'll receive emails immediately
-- **Spam Protection**: Honeypot field and validation
-- **Fallback Options**: Gmail compose link as backup
-- **Success Feedback**: Visual confirmation for users
+- **EmailJS Integration**: Direct email sending from frontend
 - **Form Validation**: Client-side validation with error messages
+- **Loading States**: Visual feedback during form submission
+- **Success Feedback**: Confirmation messages for users
+- **Fallback Options**: Gmail compose link as backup
+- **Spam Protection**: Form validation and honeypot fields
+- **Responsive Design**: Works on all devices
 
 ## 🛠 Technologies Used
 
@@ -56,8 +96,8 @@ The project includes:
 - Vite
 - React Hook Form
 - Zod Validation
+- EmailJS
 - Lucide Icons
-- Netlify Forms
 - Custom Cursor Effects
 
 ## 📱 Features
@@ -65,7 +105,7 @@ The project includes:
 - **Responsive Design**: Works perfectly on all devices
 - **Dark/Light Mode**: Toggle between themes
 - **Smooth Scrolling**: Enhanced user experience
-- **Contact Form**: Netlify Forms integration
+- **Contact Form**: EmailJS integration
 - **Project Showcase**: Display your work with live demos
 - **Skills Section**: Animated skill display
 - **Performance Optimized**: Fast loading and smooth animations
@@ -82,18 +122,12 @@ The project includes:
 
 ## 📞 Contact Form Configuration
 
-### Netlify Forms Setup (Automatic)
-1. Forms are automatically detected by Netlify
-2. No additional configuration needed
-3. View submissions in Netlify dashboard
-4. Set up email notifications in Netlify settings
-
-### Email Notification Setup
-1. Go to Netlify Dashboard → Your Site → Forms
-2. Click "Settings & Usage"
-3. Add your email address
-4. Enable notifications for new submissions
-5. Customize notification templates (optional)
+### EmailJS Setup (Recommended)
+1. Create EmailJS account at https://www.emailjs.com/
+2. Set up email service (Gmail, Outlook, etc.)
+3. Create email template with required variables
+4. Update configuration in `src/utils/emailConfig.ts`
+5. Test the contact form
 
 ### Form Features
 - Client-side validation
@@ -107,26 +141,27 @@ The project includes:
 
 1. Clone the repository
 2. Install dependencies: `npm install`
-3. Start development server: `npm run dev`
-4. Build for production: `npm run build`
+3. Configure EmailJS credentials
+4. Start development server: `npm run dev`
+5. Build for production: `npm run build`
 
 ## 📦 Deployment
 
 The site can be deployed to:
-- **Netlify** (recommended for forms)
+- **Netlify** (recommended)
 - Vercel
 - GitHub Pages
 - Any static hosting service
 
-## 🎯 Netlify Forms Benefits
+## 🎯 EmailJS Benefits
 
-✅ **No Backend Required**: Serverless form handling  
-✅ **Instant Setup**: Works out of the box  
-✅ **Email Notifications**: Real-time alerts  
-✅ **Spam Protection**: Built-in security  
-✅ **Form Management**: Dashboard for submissions  
-✅ **Free Tier**: 100 submissions/month  
-✅ **Reliable**: 99.9% uptime  
+✅ **No Backend Required**: Serverless email sending  
+✅ **Easy Setup**: Simple configuration process  
+✅ **Reliable Delivery**: High deliverability rates  
+✅ **Spam Protection**: Built-in security features  
+✅ **Free Tier**: 200 emails/month  
+✅ **Multiple Services**: Gmail, Outlook, Yahoo, etc.  
+✅ **Template System**: Customizable email templates  
 
 ## 📧 Contact
 

@@ -2,13 +2,14 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Mail, Github, Linkedin, Send, ExternalLink, CheckCircle } from 'lucide-react';
+import { Mail, Github, Linkedin, Send, ExternalLink, CheckCircle, AlertCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { playClickSound } from '@/utils/soundUtils';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useState } from 'react';
+import emailjs from '@emailjs/browser';
 
 const contactFormSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
@@ -35,28 +36,30 @@ const Contact = ({ id }: ContactProps) => {
     resolver: zodResolver(contactFormSchema),
   });
 
-  const encode = (data: Record<string, string>) => {
-    return Object.keys(data)
-      .map(key => encodeURIComponent(key) + "=" + encodeURIComponent(data[key]))
-      .join("&");
-  };
-
   const onSubmit = async (data: ContactFormValues) => {
     await playClickSound();
     
     try {
-      const formData = {
-        "form-name": "contact",
-        ...data
+      // EmailJS configuration
+      const serviceId = 'service_your_service_id'; // Replace with your EmailJS service ID
+      const templateId = 'template_your_template_id'; // Replace with your EmailJS template ID
+      const publicKey = 'your_public_key'; // Replace with your EmailJS public key
+
+      const templateParams = {
+        from_name: data.name,
+        from_email: data.email,
+        message: data.message,
+        to_name: 'Asad Ali', // Your name
       };
 
-      const response = await fetch("/", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: encode(formData)
-      });
+      const response = await emailjs.send(
+        serviceId,
+        templateId,
+        templateParams,
+        publicKey
+      );
 
-      if (response.ok) {
+      if (response.status === 200) {
         setIsSubmitted(true);
         toast({
           title: 'Message Sent Successfully! 🎉',
@@ -67,13 +70,13 @@ const Contact = ({ id }: ContactProps) => {
         // Reset success state after 5 seconds
         setTimeout(() => setIsSubmitted(false), 5000);
       } else {
-        throw new Error('Network response was not ok');
+        throw new Error('Failed to send email');
       }
     } catch (error) {
-      console.error('Form submission error:', error);
+      console.error('EmailJS error:', error);
       toast({
         title: 'Failed to Send Message',
-        description: "There was an error sending your message. Please try the Gmail option below or email me directly.",
+        description: "There was an error sending your message. Please try the Gmail option below or email me directly at am127955@gmail.com",
         variant: "destructive",
       });
     }
@@ -143,7 +146,7 @@ const Contact = ({ id }: ContactProps) => {
                 Send Me a Message
               </CardTitle>
               <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                Fill out the form below and I'll receive your message instantly via Netlify Forms.
+                Fill out the form below and I'll receive your message via EmailJS.
               </p>
             </CardHeader>
 
@@ -159,24 +162,7 @@ const Contact = ({ id }: ContactProps) => {
                   </p>
                 </div>
               ) : (
-                <form 
-                  onSubmit={handleSubmit(onSubmit)} 
-                  className="space-y-6" 
-                  name="contact"
-                  method="POST"
-                  data-netlify="true"
-                  data-netlify-honeypot="bot-field"
-                >
-                  {/* Hidden fields for Netlify */}
-                  <input type="hidden" name="form-name" value="contact" />
-                  
-                  {/* Honeypot field for spam protection */}
-                  <div style={{ display: 'none' }}>
-                    <label>
-                      Don't fill this out if you're human: <input name="bot-field" />
-                    </label>
-                  </div>
-
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                   <div className="space-y-2">
                     <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                       Name *
@@ -184,7 +170,6 @@ const Contact = ({ id }: ContactProps) => {
                     <Input
                       id="name"
                       {...register('name')}
-                      name="name"
                       className="w-full"
                       placeholder="Your Name"
                       aria-invalid={errors.name ? 'true' : 'false'}
@@ -200,7 +185,6 @@ const Contact = ({ id }: ContactProps) => {
                       id="email"
                       type="email"
                       {...register('email')}
-                      name="email"
                       className="w-full"
                       placeholder="your.email@example.com"
                       aria-invalid={errors.email ? 'true' : 'false'}
@@ -215,7 +199,6 @@ const Contact = ({ id }: ContactProps) => {
                     <Textarea
                       id="message"
                       {...register('message')}
-                      name="message"
                       className="w-full min-h-[120px]"
                       placeholder="Your message here..."
                       aria-invalid={errors.message ? 'true' : 'false'}
@@ -293,16 +276,30 @@ const Contact = ({ id }: ContactProps) => {
               </p>
             </Card>
 
-            <Card className="p-6 bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800 rounded-xl">
+            <Card className="p-6 bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800 rounded-xl">
               <div className="flex items-start space-x-3">
-                <Send className="h-5 w-5 text-green-600 dark:text-green-400 mt-0.5" />
+                <Send className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5" />
                 <div>
-                  <h4 className="text-sm font-semibold text-green-800 dark:text-green-200 mb-1">
-                    Netlify Forms Integration
+                  <h4 className="text-sm font-semibold text-blue-800 dark:text-blue-200 mb-1">
+                    EmailJS Integration
                   </h4>
-                  <p className="text-xs text-green-700 dark:text-green-300">
-                    Your message will be delivered instantly via Netlify's secure form handling. 
-                    I'll receive an email notification immediately.
+                  <p className="text-xs text-blue-700 dark:text-blue-300">
+                    Your message will be delivered directly to my email using EmailJS. 
+                    No server required - secure and reliable.
+                  </p>
+                </div>
+              </div>
+            </Card>
+
+            <Card className="p-6 bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800 rounded-xl">
+              <div className="flex items-start space-x-3">
+                <AlertCircle className="h-5 w-5 text-amber-600 dark:text-amber-400 mt-0.5" />
+                <div>
+                  <h4 className="text-sm font-semibold text-amber-800 dark:text-amber-200 mb-1">
+                    Setup Required
+                  </h4>
+                  <p className="text-xs text-amber-700 dark:text-amber-300">
+                    Please configure your EmailJS credentials in the Contact component to enable email functionality.
                   </p>
                 </div>
               </div>
