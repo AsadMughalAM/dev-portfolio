@@ -1,0 +1,22 @@
+[build]
+  publish = "build"
+  command = "npm run build"
+
+[build.environment]
+  NODE_VERSION = "18"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[form]
+  # Enable form detection
+  
+[[plugins]]
+  package = "@netlify/plugin-sitemap"
+
+[dev]
+  command = "npm run dev"
+  port = 8080
+  publish = "build"
