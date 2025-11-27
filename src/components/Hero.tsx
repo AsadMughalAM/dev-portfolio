@@ -90,7 +90,7 @@ const Hero = ({ scrollToSection, id }: HeroProps) => {
     
     try {
       // Method 1: Try Google Drive direct download
-      const fileId = '111noF05vql0bIx7MTWRIcZLwDHGKVRWd';
+      const fileId = '1U0_35xuJ68fMx2Tn_Bjy4Ybx3tbA4lk1';
       const directDownloadUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
       
       // Create a temporary link element for download
@@ -116,7 +116,7 @@ const Hero = ({ scrollToSection, id }: HeroProps) => {
       console.error('Download failed:', error);
       
       // Method 3: Final fallback - open view link
-      const fileId = '111noF05vql0bIx7MTWRIcZLwDHGKVRWd';
+      const fileId = '1U0_35xuJ68fMx2Tn_Bjy4Ybx3tbA4lk1';
       const viewUrl = `https://drive.google.com/file/d/${fileId}/view`;
       window.open(viewUrl, '_blank', 'noopener,noreferrer');
     }
